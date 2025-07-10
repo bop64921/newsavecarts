@@ -21,7 +21,7 @@ class Plugin
     }
     }
 
-    public function activate()
+    public static function activate()
     {
          Installer::create_saved_carts_table();
          Installer::create_saved_carts_page();
@@ -29,7 +29,7 @@ class Plugin
         update_option('save_carts_activated', true);
     }
 
-    public function deactivate()
+    public static function deactivate()
     {
         // Code to run on plugin deactivation
     }

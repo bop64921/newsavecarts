@@ -12,27 +12,22 @@ Domain Path: /languages
 */
 
 if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly
+    exit;
 }
 
-// Load Composer autoload (if using Composer later)
-// require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-
-// Manually load the main plugin class (for now)
+// Autoload via Composer (if using)
 require_once plugin_dir_path(__FILE__) . 'src/Plugin.php';
-
+require_once plugin_dir_path(__FILE__) . 'src/Setup/Installer.php';
+require_once plugin_dir_path(__FILE__) . 'src/Frontend/PublicView.php';
 use SaveCarts\Plugin;
 
-/**
- * Run the plugin
- */
-function save_carts_run_plugin() {
-    $plugin = new Plugin();
-}
-save_carts_run_plugin();
-
-/**
- * Register activation and deactivation hooks
- */
+// Register activation and deactivation hooks
 register_activation_hook(__FILE__, [Plugin::class, 'activate']);
 register_deactivation_hook(__FILE__, [Plugin::class, 'deactivate']);
+
+// Run the plugin
+function save_carts_run_plugin() {
+    new Plugin();
+}
+save_carts_run_plugin();
+?>
