@@ -16,9 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Autoload via Composer (if using)
-require_once plugin_dir_path(__FILE__) . 'src/Plugin.php';
-require_once plugin_dir_path(__FILE__) . 'src/Setup/Installer.php';
-require_once plugin_dir_path(__FILE__) . 'src/Frontend/PublicView.php';
+require_once __DIR__ . '/vendor/autoload.php';
 use SaveCarts\Plugin;
 
 // Register activation and deactivation hooks

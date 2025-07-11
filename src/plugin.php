@@ -17,7 +17,8 @@ class Plugin
     public function init()
     {
         if (!is_admin()) {
-        (new \SaveCarts\Frontend\PublicView());
+        new \SaveCarts\Frontend\PublicView();
+        new \SaveCarts\Core\CartSaver();
     }
     }
 
