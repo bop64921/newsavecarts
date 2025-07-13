@@ -1,7 +1,11 @@
 <?php
 
 namespace SaveCarts;
+
 use SaveCarts\Setup\Installer;
+use SaveCarts\Core\CartSaver;
+use SaveCarts\Frontend\PublicView;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -17,16 +21,15 @@ class Plugin
     public function init()
     {
         if (!is_admin()) {
-        new \SaveCarts\Frontend\PublicView();
-        new \SaveCarts\Core\CartSaver();
-    }
+            new PublicView();
+            new CartSaver();
+        }
     }
 
     public static function activate()
     {
-         Installer::create_saved_carts_table();
-         Installer::create_saved_carts_page();
-        // Optional: flag in DB to know plugin was activated
+        Installer::create_saved_carts_table();
+        Installer::create_saved_carts_page();
         update_option('save_carts_activated', true);
     }
 
@@ -34,6 +37,4 @@ class Plugin
     {
         // Code to run on plugin deactivation
     }
-
-
 }
