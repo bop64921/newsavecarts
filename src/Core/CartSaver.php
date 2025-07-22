@@ -2,8 +2,7 @@
 
 namespace SaveCarts\Core;
 
-use WC;
-use wpdb;
+
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +13,9 @@ class CartSaver
     public function __construct()
     {
         // Hook into cart page
+        error_log('✅ CartSaver constructor ejecutado');
         add_action('woocommerce_cart_collaterals', [$this, 'render_save_cart_form']);
+        
     }
 
     /**
@@ -22,7 +23,7 @@ class CartSaver
      */
     public function render_save_cart_form()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cart_submit'])) {
+      /*  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cart_submit'])) {
             $this->handle_form_submission();
         }
 
@@ -34,6 +35,8 @@ class CartSaver
         echo '<button type="submit" name="save_cart_submit" class="button">Save cart</button>';
         echo '</form>';
         echo '</div>';
+        */
+        echo '<div style="border: 2px solid red; padding: 10px; margin: 10px 0;">🔥 THIS IS THE FORM BLOCK (test) 🔥</div>';
     }
 
     /**
