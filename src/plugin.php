@@ -5,6 +5,8 @@ namespace SaveCarts;
 use SaveCarts\Setup\Installer;
 use SaveCarts\Core\CartSaver;
 use SaveCarts\Frontend\PublicView;
+use SaveCarts\Core\Hookfallback;
+use SaveCarts\Admin\Admin;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -23,6 +25,8 @@ class Plugin
         if (!is_admin()) {
             new PublicView();
             new CartSaver();
+            new Hookfallback();
+            new Admin();
         }
     }
 
