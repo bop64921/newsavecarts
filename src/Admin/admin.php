@@ -36,22 +36,28 @@ class Admin {
 
         add_settings_field(
             'save_carts_auto_display',
-            __('Automatically show the save cart form on the cart page', 'save-carts'),
+            __('Choose how to insert the Save Cart form', 'save-carts'),
             [$this, 'render_auto_display_field'],
             'save-carts-settings',
             'save_carts_main_settings'
         );
     }
 
-  public function render_auto_display_field() {
-    $value = get_option('save_carts_auto_display', '1');
-    echo '<input type="checkbox" name="save_carts_auto_display" value="1"' . checked($value, '1', false) . '> ';
-    echo '<label>' . __('Automatically show the save cart form on the WooCommerce cart page.', 'save-carts') . '</label>';
-    
-    echo '<p style="margin-top:10px;"><code>[save_cart_form]</code> ';
-    echo __('Use this shortcode to place the form anywhere manually.', 'save-carts') . '</p>';
-}
+public function render_auto_display_field() {
+    $value = get_option('save_carts_auto_display', 'auto');
 
+   
+
+    echo '<label>';
+    echo '<input type="radio" name="save_carts_auto_display" value="auto"' . checked($value, 'auto', false) . '> ';
+    echo __('Automatically on the WooCommerce cart page', 'save-carts');
+    echo '</label><br><br>';
+
+    echo '<label>';
+    echo '<input type="radio" name="save_carts_auto_display" value="shortcode"' . checked($value, 'shortcode', false) . '> ';
+    echo __('Manually using the shortcode', 'save-carts') . ': <code>[save_cart_form]</code>';
+    echo '</label>';
+}
 
     public function render_settings_page() {
         ?>
