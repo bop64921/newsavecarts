@@ -15,30 +15,31 @@ class CartSaver
         // Hook into cart page
         error_log('✅ CartSaver constructor ejecutado');
         add_action('woocommerce_cart_collaterals', [$this, 'render_save_cart_form']);
-        
+        add_shortcode('save_cart_form', [$this, 'render_save_cart_form']);
     }
 
     /**
      * Render the form to save the current cart
      */
-    public function render_save_cart_form()
-    {
-      /*  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cart_submit'])) {
-            $this->handle_form_submission();
-        }
-
-        echo '<div class="save-cart-form">';
-        echo '<h3>Save this cart</h3>';
-        echo '<form method="post">';
-        echo '<label for="cart_name">Cart name:</label><br>';
-        echo '<input type="text" name="cart_name" id="cart_name" required><br><br>';
-        echo '<button type="submit" name="save_cart_submit" class="button">Save cart</button>';
-        echo '</form>';
-        echo '</div>';
-        */
-        echo '<div style="border: 2px solid red; padding: 10px; margin: 10px 0;">🔥 THIS IS THE FORM BLOCK (test) 🔥</div>';
+   public function render_save_cart_form()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_cart_submit'])) {
+        $this->handle_form_submission();
     }
 
+    ob_start();
+    ?>
+    <div class="save-cart-form">
+        <h3>Save this cart</h3>
+        <form method="post">
+            <label for="cart_name">Cart name:</label><br>
+            <input type="text" name="cart_name" id="cart_name" required><br><br>
+            <button type="submit" name="save_cart_submit" class="button">Save cart</button>
+        </form>
+    </div>
+    <?php
+    return ob_get_clean();
+}
     /**
      * Save the current cart to the database
      */
