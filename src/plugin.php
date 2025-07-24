@@ -5,7 +5,7 @@ namespace SaveCarts;
 use SaveCarts\Setup\Installer;
 use SaveCarts\Core\CartSaver;
 use SaveCarts\Frontend\PublicView;
-use SaveCarts\Core\Hookfallback;
+use SaveCarts\Core\HookFallback;
 use SaveCarts\Admin\Admin;
 
 if (!defined('ABSPATH')) {
@@ -20,16 +20,16 @@ class Plugin
         add_action('plugins_loaded', [$this, 'init']);
     }
 
-    public function init()
-    {
-        if (!is_admin()) {
-            new PublicView();
-            new CartSaver();
-            new Hookfallback();
-            new Admin();
-        }
+   public function init()
+{
+    if (is_admin()) {
+        new Admin(); // Solo se ejecuta en wp-admin
+    } else {
+        new PublicView();
+        new CartSaver();
+        HookFallback::init(); // (con mayúscula correcta)
     }
-
+}
     public static function activate()
     {
         Installer::create_saved_carts_table();
