@@ -22,12 +22,14 @@ class Plugin
 
    public function init()
 {
-    if (is_admin()) {
-        new Admin(); // Solo se ejecuta en wp-admin
+    if (defined('DOING_AJAX') && DOING_AJAX) {
+        new CartSaver();  // 👈 cargarlo solo para AJAX
+    } elseif (is_admin()) {
+        new Admin();
     } else {
         new PublicView();
-        new CartSaver();
-        HookFallback::init(); // (con mayúscula correcta)
+        new CartSaver();  // 👈 y también en frontend
+        HookFallback::init();
     }
 }
     public static function activate()

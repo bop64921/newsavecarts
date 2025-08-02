@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 // Autoload via Composer (if using)
 require_once __DIR__ . '/vendor/autoload.php';
 use SaveCarts\Plugin;
-
+define('SAVE_CARTS_PLUGIN_URL', plugin_dir_url(__FILE__));
 // Register activation and deactivation hooks
 register_activation_hook(__FILE__, [Plugin::class, 'activate']);
 register_deactivation_hook(__FILE__, [Plugin::class, 'deactivate']);
