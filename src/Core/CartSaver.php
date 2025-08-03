@@ -15,12 +15,12 @@ class CartSaver
         add_shortcode('save_cart_form', [$this, 'render_save_cart_form']);
         error_log('🚨 CartSaver se ha instanciado correctamente');
 
- 
+
 
 
         // Acción AJAX para guardar carrito
-       add_action('wp_ajax_save_cart_ajax', [$this, 'handle_ajax_cart_save']);
-    add_action('wp_ajax_nopriv_save_cart_ajax', [$this, 'handle_ajax_cart_save']);
+        add_action('wp_ajax_save_cart_ajax', [$this, 'handle_ajax_cart_save']);
+        add_action('wp_ajax_nopriv_save_cart_ajax', [$this, 'handle_ajax_cart_save']);
 
         // Cargar JS externo
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
@@ -28,16 +28,25 @@ class CartSaver
 
     public function enqueue_scripts()
     {
+
+        if (!is_cart()) return;
         wp_enqueue_script(
-    'save-cart-js',
-    SAVE_CARTS_PLUGIN_URL . 'assets/js/save-cart.js',
-    ['jquery'],
-    '1.0',
-    true
-);
+            'save-cart-js',
+            SAVE_CARTS_PLUGIN_URL . 'assets/js/save-cart.js',
+            ['jquery'],
+            '1.0',
+            true
+        );
+        wp_enqueue_style(
+            'save-cart-style',
+            SAVE_CARTS_PLUGIN_URL . 'assets/css/save-cart.css',
+            [],
+            filemtime(SAVE_CARTS_PLUGIN_URL . 'assets/css/save-cart.css')
+        );
+
         wp_localize_script('save-cart-js', 'save_cart_ajax_obj', [
             'ajax_url' => admin_url('admin-ajax.php'),
-             'nonce'    => wp_create_nonce('save_cart_nonce'),
+            'nonce'    => wp_create_nonce('save_cart_nonce'),
             'success_msg' => __('Cart saved successfully!', 'save-carts'),
         ]);
     }
@@ -45,7 +54,7 @@ class CartSaver
     public function render_save_cart_form()
     {
         ob_start();
-        ?>
+?>
         <div class="woocommerce">
             <div class="woocommerce-form-coupon-toggle">
                 <h3><?php esc_html_e('Save this cart', 'save-carts'); ?></h3>
@@ -61,15 +70,13 @@ class CartSaver
                 </form>
             </div>
         </div>
-        <?php
+<?php
         return ob_get_clean();
     }
 
     public function handle_ajax_cart_save()
     {
-        error_log('✅ FUNCION AJAX EJECUTADA');
-        error_log('🛠️ AJAX recibido');
-    error_log(print_r($_POST, true));
+        
         if (!is_user_logged_in()) {
             wp_send_json_error(['message' => __('You must be logged in to save a cart.', 'save-carts')]);
         }
@@ -110,7 +117,9 @@ class CartSaver
             'updated_at' => current_time('mysql'),
         ]);
 
-        wp_send_json_success(['message' => __('Cart saved successfully!', 'save-carts')]);
+        wp_send_json_success([
+            'message' => __('Your cart has been saved successfully.', 'save-carts'),
+            'show_actions' => true
+        ]);
     }
 }
-

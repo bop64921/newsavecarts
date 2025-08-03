@@ -24,7 +24,8 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 const success = response.success;
                 const message = response.data?.message || 'Guardado sin mensaje.';
-                mostrarMensaje(message, success);
+                const mostrarAcciones = response.data?.show_actions || false; // 👈 Nuevo
+                mostrarMensaje(message, success, mostrarAcciones); // 👈 Pasa el flag
             },
             error: function(xhr, status, error) {
                 mostrarMensaje('Error inesperado al guardar el carrito.', false);
@@ -33,12 +34,39 @@ jQuery(document).ready(function($) {
         });
     });
 
-    function mostrarMensaje(texto, exito) {
+    function mostrarMensaje(texto, exito, mostrarAcciones = false) {
         const container = form.closest('.woocommerce-form-coupon-toggle');
         container.find('.woocommerce-error, .woocommerce-message').remove();
 
         const clase = exito ? 'woocommerce-message' : 'woocommerce-error';
         const msg = $('<div>').addClass(clase).text(texto);
+
+        // 👇 Si queremos mostrar botones adicionales
+        if (mostrarAcciones && exito) {
+            const vaciarBtn = $('<button>')
+                .text('Empty the cart')
+                .addClass('button')
+                .css({ marginLeft: '10px' })
+                .on('click', function () {
+                    $.post(save_cart_ajax_obj.ajax_url, {
+                        action: 'vaciar_carrito',
+                        nonce: save_cart_ajax_obj.nonce
+                    }, function () {
+                        location.reload(); // o redirigir a donde tú quieras
+                    });
+                });
+
+            const seguirBtn = $('<button>')
+                .text('Continue shopping')
+                .addClass('button')
+                .css({ marginLeft: '10px' })
+                .on('click', function () {
+                    msg.fadeOut();
+                });
+
+            msg.append('<br><br>').append(vaciarBtn).append(seguirBtn);
+        }
+
         container.prepend(msg);
     }
 });
