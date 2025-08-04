@@ -15,6 +15,10 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+if (!defined('SAVE_CARTS_PRO')) {
+    define('SAVE_CARTS_PRO', false);
+}
+
 // Autoload via Composer (if using)
 require_once __DIR__ . '/vendor/autoload.php';
 use SaveCarts\Plugin;

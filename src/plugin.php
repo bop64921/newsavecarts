@@ -7,6 +7,7 @@ use SaveCarts\Core\CartSaver;
 use SaveCarts\Frontend\PublicView;
 use SaveCarts\Core\HookFallback;
 use SaveCarts\Admin\Admin;
+use SaveCarts\Core\CartCleaner;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -23,7 +24,8 @@ class Plugin
    public function init()
 {
     if (defined('DOING_AJAX') && DOING_AJAX) {
-        new CartSaver();  // 👈 cargarlo solo para AJAX
+        new CartSaver(); 
+        new CartCleaner(); // 👈 cargarlo solo para AJAX
     } elseif (is_admin()) {
         new Admin();
     } else {

@@ -43,16 +43,23 @@ class CartSaver
             [],
             filemtime(SAVE_CARTS_PLUGIN_URL . 'assets/css/save-cart.css')
         );
-
+        $shop_url = wc_get_page_permalink('shop');
+        if (defined('SAVE_CARTS_PRO') && SAVE_CARTS_PRO) {
+            $shop_url = apply_filters('save_carts_continue_shopping_url', $shop_url);
+        }
         wp_localize_script('save-cart-js', 'save_cart_ajax_obj', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('save_cart_nonce'),
             'success_msg' => __('Cart saved successfully!', 'save-carts'),
+            'shop_url'    => esc_url($shop_url),
         ]);
     }
 
     public function render_save_cart_form()
     {
+        if (!function_exists('WC') || WC()->cart->is_empty()) {
+            return ''; // No mostrar el formulario si el carrito está vacío
+        }
         ob_start();
 ?>
         <div class="woocommerce">
@@ -76,7 +83,7 @@ class CartSaver
 
     public function handle_ajax_cart_save()
     {
-        
+
         if (!is_user_logged_in()) {
             wp_send_json_error(['message' => __('You must be logged in to save a cart.', 'save-carts')]);
         }
@@ -106,6 +113,16 @@ class CartSaver
             wp_send_json_error(['message' => __('Your cart is empty.', 'save-carts')]);
         }
 
+        if (!SAVE_CARTS_PRO) {
+            $count = $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM $table WHERE user_id = %d",
+                $user_id
+            ));
+            if ($count >= 5) {
+                wp_send_json_error(['message' => __('You can only save up to 5 carts.', 'save-carts')]);
+            }
+        }
+
         $wpdb->insert($table, [
             'user_id' => $user_id,
             'name' => $cart_name,
@@ -117,9 +134,20 @@ class CartSaver
             'updated_at' => current_time('mysql'),
         ]);
 
+        $message = __('Your cart has been saved successfully.', 'save-carts');
+
+        if (defined('SAVE_CARTS_PRO') && SAVE_CARTS_PRO) {
+            $custom = get_option('save_carts_success_message');
+            if (!empty($custom)) {
+                $message = $custom;
+            }
+        }
+
         wp_send_json_success([
-            'message' => __('Your cart has been saved successfully.', 'save-carts'),
+            'message' => $message,
             'show_actions' => true
         ]);
+
+        
     }
 }
