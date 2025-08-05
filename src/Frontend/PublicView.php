@@ -28,10 +28,20 @@ class PublicView
      * Add custom menu item to the "My Account" sidebar.
      */
     public function add_account_menu_item($items)
-    {
-        $items['saved-carts'] = __('Saved Carts', 'save-carts');
-        return $items;
+{
+    $new_items = [];
+
+    foreach ($items as $key => $label) {
+        // Justo antes de "customer-logout"
+        if ($key === 'customer-logout') {
+            $new_items['saved-carts'] = __('Saved Carts', 'save-carts');
+        }
+
+        $new_items[$key] = $label;
     }
+
+    return $new_items;
+}
 
     /**
      * Output the content for the "Saved Carts" endpoint.
