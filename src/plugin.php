@@ -9,6 +9,8 @@ use SaveCarts\Core\HookFallback;
 use SaveCarts\Admin\Admin;
 use SaveCarts\Core\CartCleaner;
 use SaveCarts\Core\SavedCartsDisplay;
+use SaveCarts\Includes\Assets;
+use SaveCarts\Includes\AjaxHandlers;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -31,6 +33,8 @@ class Plugin
         new Admin();
     } else {
         new PublicView();
+        new Assets();
+        new AjaxHandlers();
         new SavedCartsDisplay();
         new CartSaver();  // 👈 y también en frontend
         HookFallback::init();

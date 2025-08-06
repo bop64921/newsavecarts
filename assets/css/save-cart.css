@@ -54,3 +54,45 @@
 .woocommerce-message .button:last-of-type:hover {
     background-color: #3e8e41;
 }
+
+.saved-carts-table {
+    all: initial;
+    width: 100%;
+    font-family: sans-serif;
+    font-size: 1rem;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.saved-carts-table th,
+.saved-carts-table td {
+    all: unset;
+    background-color: #f7f7f7;
+    padding: 12px 8px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1rem;
+}
+
+.saved-carts-table th {
+    font-weight: bold;
+    color: #222;
+}
+
+.saved-carts-table td {
+    border-radius: 6px;
+    height: 5vh;
+}
+
+.saved-carts-table .action-button {
+    font-size: 1.6rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.saved-carts-table .disabled-pro {
+    color: #ccc;
+    font-size: 1.6rem;
+    cursor: not-allowed;
+}
