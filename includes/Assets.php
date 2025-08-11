@@ -16,7 +16,7 @@ class Assets
     public function enqueue_frontend_assets()
     {
         // Solo cargar en el carrito o en el endpoint "saved-carts"
-        if (!is_cart() && !is_wc_endpoint_url('saved-carts')) {
+        if (!is_cart() && !is_account_page()) {
             return;
         }
 

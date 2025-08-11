@@ -81,3 +81,32 @@ jQuery(document).ready(function ($) {
     container.prepend(msg);
   }
 });
+
+console.log("Save Carts JS loaded");
+
+jQuery(document).on("click", ".delete-cart-button", function (e) {
+    e.preventDefault();
+    console.log("Machuhaooo");
+    if (!confirm("Are you sure you want to delete this cart?")) {
+        return;
+    }
+
+    var cartId = jQuery(this).data("cart-id");
+
+    jQuery.post(
+        save_cart_ajax_obj.ajax_url,
+        {
+            action: "delete_saved_cart_ajax",
+            cart_id: cartId,
+            nonce: save_cart_ajax_obj.nonce
+        },
+        function (response) {
+            if (response.success) {
+                alert(response.data.message);
+                location.reload();
+            } else {
+                alert(response.data.message || "Error deleting cart.");
+            }
+        }
+    );
+});

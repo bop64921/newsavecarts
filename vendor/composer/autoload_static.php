@@ -9,11 +9,16 @@ class ComposerStaticInit7d4d9151c5941598792e9880a17f695c
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
+            'SaveCarts\\Includes\\' => 19,
             'SaveCarts\\' => 10,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'SaveCarts\\Includes\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/includes',
+        ),
         'SaveCarts\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',

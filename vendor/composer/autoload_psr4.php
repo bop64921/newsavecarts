@@ -6,5 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'SaveCarts\\Includes\\' => array($baseDir . '/includes'),
     'SaveCarts\\' => array($baseDir . '/src'),
 );

@@ -43,12 +43,29 @@ class CartSaver
         return ob_get_clean();
     }
 
-  public static function save_cart($user_id, $cart_name)
+public static function save_cart()
 {
+    
+    if (!is_user_logged_in()) {
+        error_log('❌ No logueado');
+        return new \WP_Error('not_logged_in', __('You must be logged in to save a cart.', 'save-carts'));
+    }
+
+    if (!check_ajax_referer('save_cart_nonce', 'nonce', false)) {
+        error_log('❌ Nonce inválido');
+    return new \WP_Error('invalid_nonce', __('Invalid nonce.', 'save-carts'));
+}
+
+
+    $cart_name = sanitize_text_field($_POST['cart_name'] ?? '');
+    $user_id   = get_current_user_id();
+
+    if (empty($cart_name)) {
+        return new \WP_Error('missing_name', __('Cart name is required.', 'save-carts'));
+    }
+
     global $wpdb;
-
     $table = $wpdb->prefix . 'savedcarts';
-
     $cart = WC()->cart;
 
     if (!$cart || $cart->is_empty()) {
@@ -70,8 +87,8 @@ class CartSaver
             "SELECT COUNT(*) FROM $table WHERE user_id = %d",
             $user_id
         ));
-        if ($count >= 5) {
-            return new \WP_Error('limit_reached', __('You can only save up to 5 carts.', 'save-carts'));
+        if ($count >= 3) {
+            return new \WP_Error('limit_reached', __('You can only save up to 3 carts.', 'save-carts'));
         }
     }
 

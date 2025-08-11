@@ -26,6 +26,7 @@ class Plugin
 
    public function init()
 {
+    new AjaxHandlers();
     if (defined('DOING_AJAX') && DOING_AJAX) {
         new CartSaver(); 
         new CartCleaner(); // 👈 cargarlo solo para AJAX
@@ -34,7 +35,6 @@ class Plugin
     } else {
         new PublicView();
         new Assets();
-        new AjaxHandlers();
         new SavedCartsDisplay();
         new CartSaver();  // 👈 y también en frontend
         HookFallback::init();
