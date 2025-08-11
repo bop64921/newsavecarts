@@ -28,6 +28,14 @@ class Assets
         );
 
         wp_enqueue_script(
+            'save-carts-notifications',
+            SAVE_CARTS_PLUGIN_URL . 'assets/js/notifications.js',
+            ['jquery'],
+            '1.0',
+            true
+        );
+
+        wp_enqueue_script(
             'save-cart-js',
             SAVE_CARTS_PLUGIN_URL . 'assets/js/save-cart.js',
             ['jquery'],
