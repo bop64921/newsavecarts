@@ -96,3 +96,6 @@
     font-size: 1.6rem;
     cursor: not-allowed;
 }
+
+.save-carts-ui { margin-bottom: 12px; }
+.save-carts-notices { margin-bottom: 8px; }

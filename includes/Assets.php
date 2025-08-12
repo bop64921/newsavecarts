@@ -38,7 +38,7 @@ class Assets
         wp_enqueue_script(
             'save-cart-js',
             SAVE_CARTS_PLUGIN_URL . 'assets/js/save-cart.js',
-            ['jquery'],
+            ['jquery', 'save-carts-notifications'],
             '1.0',
             true
         );

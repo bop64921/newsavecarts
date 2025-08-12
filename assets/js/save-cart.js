@@ -4,7 +4,11 @@ jQuery(document).ready(function ($) {
   if (!form.length) return;
 
   // NEW: initialize notices container (uses the same wrapper you already target)
+  if (jQuery('.save-carts-notices').length) {
+  SaveCartsNotices.init('.save-carts-notices');
+} else {
   SaveCartsNotices.init('.woocommerce-form-coupon-toggle');
+}
 
   form.on("submit", function (e) {
     e.preventDefault();
@@ -145,48 +149,60 @@ jQuery(document).ready(function ($) {
 jQuery(document).on("click", ".delete-cart-button", function (e) {
   e.preventDefault();
 
-  // OLD:
-  // console.log("Machuhaooo");
-  // if (!confirm("Are you sure you want to delete this cart?")) {
-  //   return;
-  // }
-
-  // NEW: no browser popups; rely on inline notices for feedback
   const $btn = jQuery(this);
   const cartId = $btn.data("cart-id");
 
   if (!cartId) {
-    SaveCartsNotices.show("Invalid cart id.", false);
+    SaveCartsNotices.show("Invalid cart id.", false, 0); // 0 = no autohide
     return;
   }
 
-  // Soft UX while processing
-  const $row = $btn.closest("tr.saved-cart-row");
-  const prevHtml = $btn.html();
-  $btn.prop("disabled", true).html("…");
+  // OLD (browser confirm + alert):
+  // if (!confirm("Are you sure you want to delete this cart?")) {
+  //   return;
+  // }
 
-  jQuery.post(
-    save_cart_ajax_obj.ajax_url,
-    {
-      action: "delete_saved_cart_ajax",
+  // NEW: inline confirm with two buttons inside a WooCommerce-style notice
+  SaveCartsNotices.clear();
+  const $wrap = jQuery('<div class="sc-confirm-delete-wrap">');
+  const $text = jQuery('<span>').text('Delete this cart? ');
+  const $yes  = jQuery('<button type="button">').addClass('button').text('Delete');
+  const $no   = jQuery('<button type="button">').addClass('button').css({ marginLeft: '8px' }).text('Cancel');
+
+  $wrap.append($text).append($yes).append($no);
+
+  // Show as error style (destructive) and keep it until user acts
+  SaveCartsNotices.show($wrap, false, 0);
+
+  // Cancel button
+  $no.on('click', () => SaveCartsNotices.clear());
+
+  // Confirm button
+  $yes.on('click', function () {
+    $yes.prop('disabled', true).text('Deleting…');
+
+    const $row = $btn.closest('tr.saved-cart-row');
+    const prevHtml = $btn.html();
+    $btn.prop('disabled', true).html('…');
+
+    jQuery.post(save_cart_ajax_obj.ajax_url, {
+      action: 'delete_saved_cart_ajax',
       cart_id: cartId,
       nonce: save_cart_ajax_obj.nonce
-    }
-  ).done(function (response) {
-    if (response && response.success) {
-      // OLD:
-      // alert(response.data.message);
-      // location.reload();
-
-      // NEW: remove row without full reload + inline notice
-      if ($row.length) $row.remove();
-      SaveCartsNotices.show(response.data?.message || "Cart deleted successfully.", true);
-    } else {
-      SaveCartsNotices.show(response?.data?.message || "Error deleting cart.", false);
-    }
-  }).fail(function () {
-    SaveCartsNotices.show("Unexpected error while deleting the cart.", false);
-  }).always(function () {
-    $btn.prop("disabled", false).html(prevHtml);
+    })
+    .done(function (response) {
+      if (response && response.success) {
+        if ($row.length) $row.remove();
+        SaveCartsNotices.show(response.data?.message || 'Cart deleted successfully.', true, 0);
+      } else {
+        SaveCartsNotices.show(response?.data?.message || 'Error deleting cart.', false, 0);
+      }
+    })
+    .fail(function () {
+      SaveCartsNotices.show('Unexpected error while deleting the cart.', false, 0);
+    })
+    .always(function () {
+      $btn.prop('disabled', false).html(prevHtml);
+    });
   });
 });

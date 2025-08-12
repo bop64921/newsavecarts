@@ -35,7 +35,11 @@ class SavedCartsDisplay
         }
 
         ob_start(); ?>
-
+        <!-- NEW: UI hub for notices/panels -->
+        <div class="save-carts-ui">
+            <div class="woocommerce-notices-wrapper save-carts-notices"></div>
+            <div class="save-carts-panel" aria-live="polite"></div>
+        </div>
         <table class="saved-carts-table">
             <thead>
                 <tr>
@@ -82,7 +86,7 @@ class SavedCartsDisplay
             </tbody>
         </table>
 
-        <?php
+<?php
         return ob_get_clean();
     }
 }
